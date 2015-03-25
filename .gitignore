@@ -254,3 +254,5 @@ target/
 # C extensions
 *.so
 
+# ipyhton notebooks
+src/.ipynb_checkpoints/
