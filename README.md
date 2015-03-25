@@ -38,11 +38,19 @@ File Structure
     |- scratch/         # temporary files that can be safely deleted or lost
     |- README           # the top level description of content
 
+Execution
+---------
+
+```
+cd ./src/
+ipython notebook
+```
 
 Todo
 ----
 
-- [ ] Add project information goals, etc...
+- [ ] Add project information goals, etc... @guillaume
 - [ ] change src/README.md
+- [ ] Change data/README description @guillaume
 - [ ] 
 
