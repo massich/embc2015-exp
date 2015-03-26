@@ -29,5 +29,3 @@ class Patient(object):
         self.rayleigh_params = rayleigh.fit(self.data)
         self.gaussian_params = norm.fit(self.data)
         # self.rice_params = rice.fit(self.data)
-
-
