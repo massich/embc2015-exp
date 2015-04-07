@@ -51,12 +51,16 @@ for patientId in range(1):
                    id_vars=['sampleId'], value_vars=['DCE'], 
                    var_name=['drop','DCE']).drop('drop',1)
     data['DCE']=data["DCE"].map(lambda x: int(x[1:]))
-    puta  = data
-    puta['gt'] = label['gt']
-    puta['zone'] = label['zone']
+    data[['gt','zone']]=label
 
-    sns.tsplot(data, time="DCE", unit="sampleId", condition="gt", 
+    sns.tsplot(data, time="DCE", unit="sampleId", condition="zone", 
                value="value")
+    sns.tsplot(data[data.gt=='cancer'], time="DCE", unit="sampleId",
+               value="value", color='r')
+
+data[data['gt']=='cancer']
+df.label['gt'].
+print set(])
 
 Cell 5 (Use less data)
 ----------------------
@@ -102,3 +106,47 @@ for ax, patientId in zip(ax, random.sample(range(1, 17), nplots) ):
                time="DCE", unit="sampleId", condition="gt", value="value",
                err_style=["ci_band"], ci=np.linspace(100, 10, 4),
                ax=ax)
+
+Cell 6
+------
+
+i_want_hue = ['#4C3F30', '#CE53D5', '#74D348', '#7ABEBC', '#C44731',
+              '#C8AA83', '#6F70E1', '#537739', '#CBC94A', '#5F88BA',
+              '#87D695', '#503359', '#CA4A93', '#C18234', '#C8A7BE',
+              '#B54E60', '#966BB8']
+myPalette = sns.color_palette(i_want_hue, 17)
+
+df = pd.DataFrame({'a' : [p.a for p in fitted_param],
+                   'k' : [p.k for p in fitted_param],
+                   'b' : [p.b for p in fitted_param],
+                   'q' : [p.q for p in fitted_param], 
+                   'v' : [p.v for p in fitted_param],
+                   'patient' : range(len(fitted_param))})
+
+g = sns.PairGrid(df, hue="patient", size=2.5,
+                palette=mypalette,
+                )
+                 #vars=["factor", "shift", "v", "std"])
+g.map_offdiag(plt.scatter, s=[20*(p+1) for p in patients],
+              markers=['o','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'])
+g.map_diag(plt.hist)
+patients = df.patientid.reset_index()['patientid'].unique()
+patients
+print 'hi'
+
+
+
+Cell variable marker size
+-------------------------
+
+n_points = 5
+s = [(x+1)*100 for x in range(n_points)]
+df = pd.DataFrame({'a' : range(n_points),
+                   'b' : range(n_points),
+                   'label' : range(n_points),
+                   'size' : s})
+
+g = sns.PairGrid(df, hue="label", size=2.5)
+g.map_offdiag(plt.scatter, s=s)
+g.map_diag(plt.hist)
+
