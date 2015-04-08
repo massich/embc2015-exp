@@ -158,3 +158,28 @@ g.map_diag(plt.hist)
 g.map_offdiag(plt.scatter, s=[compute_fit_error(get_patient(df,p), param)
                               for p, param in zip(patients, fitted_param)])
 
+Cell: Fit a model at every pixel
+--------------------------------
+
+puta = 0
+def fit_GLF(x):
+    global puta
+    print puta
+    print x.as_matrix()
+    #popt, pcov = curve_fit(myGeneralised_logistic_function,
+    #                       range(40),
+    #                       x.as_matrix(),
+    #                       p0=(150., 450., .5, 10., .25))
+    puta = puta+1
+    return (len(x.as_matrix()), x.as_matrix()) #myGLF(popt[0], popt[1], popt[2], popt[3], popt[4])
+
+print 'hi'
+xx = df.head()
+xx['kk','ff'] = xx.DCE.apply(fit_GLF, axis=1)
+print yy
+for 
+kk = [ xx[x].DCE for x in xx.index]
+print kk
+
+
+
