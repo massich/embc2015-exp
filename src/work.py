@@ -107,38 +107,11 @@ for ax, patientId in zip(ax, random.sample(range(1, 17), nplots) ):
                err_style=["ci_band"], ci=np.linspace(100, 10, 4),
                ax=ax)
 
-Cell 6
-------
-
-i_want_hue = ['#4C3F30', '#CE53D5', '#74D348', '#7ABEBC', '#C44731',
-              '#C8AA83', '#6F70E1', '#537739', '#CBC94A', '#5F88BA',
-              '#87D695', '#503359', '#CA4A93', '#C18234', '#C8A7BE',
-              '#B54E60', '#966BB8']
-myPalette = sns.color_palette(i_want_hue, 17)
-
-df = pd.DataFrame({'a' : [p.a for p in fitted_param],
-                   'k' : [p.k for p in fitted_param],
-                   'b' : [p.b for p in fitted_param],
-                   'q' : [p.q for p in fitted_param], 
-                   'v' : [p.v for p in fitted_param],
-                   'patient' : range(len(fitted_param))})
-
-g = sns.PairGrid(df, hue="patient", size=2.5,
-                palette=mypalette,
-                )
-                 #vars=["factor", "shift", "v", "std"])
-g.map_offdiag(plt.scatter, s=[20*(p+1) for p in patients],
-              markers=['o','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'])
-g.map_diag(plt.hist)
-patients = df.patientid.reset_index()['patientid'].unique()
-patients
-print 'hi'
-
-
 
 Cell variable marker size
 -------------------------
-
+# I rewrote the seaborn PairGrid class function that allows to do so
+# code is in common.py
 n_points = 5
 s = [(x+1)*100 for x in range(n_points)]
 df = pd.DataFrame({'a' : range(n_points),
@@ -146,7 +119,42 @@ df = pd.DataFrame({'a' : range(n_points),
                    'label' : range(n_points),
                    'size' : s})
 
-g = sns.PairGrid(df, hue="label", size=2.5)
-g.map_offdiag(plt.scatter, s=s)
+h = myScatterGrid(df, hue="label", size=2.5)
+h.map_offdiag(plt.scatter, s=s)
+h.map_diag(plt.hist)
+
+
+Cell 6
+------
+
+def compute_fit_error(patient_df, param):
+    num_samples = len(patient_df.index)
+    mean_y = patient_df.DCE.mean().as_matrix()
+    model_y =  myGeneralised_logistic_function(np.linspace(0,39,40),
+                A=param.a, K=param.k, B=param.b, Q=param.q, v=param.v)
+    return sum((model_y-mean_y)**2)**.5
+
+def get_patient(df, p):
+    return df.loc[(p, slice(None)),:]
+
+i_want_hue = ['#4C3F30', '#CE53D5', '#74D348', '#7ABEBC', '#C44731',
+              '#C8AA83', '#6F70E1', '#537739', '#CBC94A', '#5F88BA',
+              '#87D695', '#503359', '#CA4A93', '#C18234', '#C8A7BE',
+              '#B54E60', '#966BB8']
+myPalette = sns.color_palette(i_want_hue, 17)
+
+param_df = pd.DataFrame({'a' : [p.a for p in fitted_param],
+                         'k' : [p.k for p in fitted_param],
+                         'b' : [p.b for p in fitted_param],
+                         'q' : [p.q for p in fitted_param], 
+                         'v' : [p.v for p in fitted_param],
+                         'patient' : range(len(fitted_param))})
+
+g = myScatterGrid(param_df, hue="patient", size=2.5,
+                  palette=myPalette,
+                  )
+                 #vars=["factor", "shift", "v", "std"])
 g.map_diag(plt.hist)
+g.map_offdiag(plt.scatter, s=[compute_fit_error(get_patient(df,p), param)
+                              for p, param in zip(patients, fitted_param)])
 
