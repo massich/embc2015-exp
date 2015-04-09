@@ -45,6 +45,11 @@ Execution
 cd ./src/
 ipython notebook
 ```
+### To execute from server using tunnelling
+```
+ssh user@server.extension -p XXXX -L 7777:127.0.0.1:8888
+```
+open a browser and connect to localhost:7777
 
 Todo
 ----
