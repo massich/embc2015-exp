@@ -163,13 +163,19 @@ Cell: Fit a model at every pixel
 
 def fit_GLF(x):
     """ Return the fitting parameters and the covariance matrix """
-    popt, pcov = curve_fit(myGeneralised_logistic_function,
-                           range(40),
-                           x.astype(float),
-                           p0=(150., 450., .5, 10., .25))
-    return (myGLF(popt[0], popt[1], popt[2], popt[3], popt[4]), pcov)
+    try: 
+        popt, pcov = curve_fit(myGeneralised_logistic_function,
+                               range(40),
+                               x.astype(float),
+                               p0=(150., 450., .5, 10., .25))
+        return myGLF(popt[0], popt[1], popt[2], popt[3], popt[4])
+    except RuntimeError:
+        return myGLF(float('NaN'), float('NaN'), float('NaN'), float('NaN'))
 
-df_fit = [fit_GLF(row.DCE.as_matrix()) for idx, row in df.iterrows()]
-
-df[('glf','coef')], _ = zip(*df_fit)
+coef_df = pd.DataFrame()
+for idx, row in df.iterrows():
+    p = fit_GLF(row.DCE.as_matrix())
+    coef_df.append(pd.Series(data=[p.a, p.k, p.b, p.q, p.v],
+                             index=['A', 'K', 'B', 'Q', 'v']),
+                             ignore_index=True)
 
