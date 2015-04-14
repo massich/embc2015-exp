@@ -170,12 +170,17 @@ def fit_GLF(x):
                                p0=(150., 450., .5, 10., .25))
         return myGLF(popt[0], popt[1], popt[2], popt[3], popt[4])
     except RuntimeError:
-        return myGLF(float('NaN'), float('NaN'), float('NaN'), float('NaN'))
+        return myGLF(float('NaN'), float('NaN'), float('NaN'),
+                     float('NaN'), float('NaN'))
 
 coef_df = pd.DataFrame()
 for idx, row in df.iterrows():
+    print idx
     p = fit_GLF(row.DCE.as_matrix())
     coef_df.append(pd.Series(data=[p.a, p.k, p.b, p.q, p.v],
                              index=['A', 'K', 'B', 'Q', 'v']),
                              ignore_index=True)
+
+Cell: Try to get less samples
+-----------------------------
 
